@@ -40,12 +40,31 @@ const mostrarUsers = () => {
 
 /* VER USUARIO SESSION */
 function mostrarUserSession() {
-     const url = "http://localhost/m06Pr6/php/sesion.php"
-     
+
 }
 
-function sendText(){
-     console.log("o");
-     
-}
+function getParaula(saved) {
+     let xmlhttp = new XMLHttpRequest();
+     xmlhttp.open("GET", "php/getColor.php?"+saved, true);
+     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+     xmlhttp.onreadystatechange = function () {
+          if (xmlhttp.readyState == 4) {
+               if (xmlhttp.status == 200) {
+                    let resposta = xmlhttp.responseText;
+                    let jsonColor = JSON.parse(resposta);
+                    let color = jsonColor.color;
+                    console.log(color);
 
+                    let long = jsonColor.long;
+                    document.getElementById("palabra").innerHTML = "";
+                    for (let k = 0; k < long; k++) {
+                         let span = document.createElement("SPAN");
+                         span.id = "letra" + k;
+                         span.innerHTML = " _ ";
+                         document.getElementById("palabra").appendChild(span);
+                    }
+               }
+          }
+     }
+     xmlhttp.send();
+}
