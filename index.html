@@ -30,17 +30,20 @@
 
   <div id="e4">
     <h2>4.</h2>
+    <button onclick="mostrarUsersSession()">Ver Usuarios Session</button>
     <div id="seeDB"></div>
   </div>
 
   <div id="penjat">
     <h2>Penjat.</h2>
-    <button onclick="getParaula('')">generar Color</button>
-    
-    <button onclick="getParaula('saved=true')">generar Color</button>
+    <button onclick="generateParaula()">Empezar</button><br><br>
+
+    Letra: <input type="text" id="letra"  />
+    <button onclick="sendLetra()">Probar</button>
     <div id="palabra">
 
     </div>
+    <div id="error"></div>
   </div>
 </body>
 

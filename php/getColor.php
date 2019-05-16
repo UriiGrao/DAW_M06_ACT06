@@ -1,18 +1,50 @@
 <?php
 session_start();
 
-$colors = ["yellow", "red", "blue"];
+$colors = ["black", "red", "blue", "orange", "white"];
 
-
-if (isset($_GET["saved"])) {
-    $color = $_SESSION['color'];
-} else {
+function startGame()
+{
+    global $colors;
     $numRand = rand(0, count($colors) - 1);
     $color = $colors[$numRand];
-
     $_SESSION['color'] = $color;
+
+    $long = strlen($color);
+
+    echo '{"color":"' . $color . '", "long":"' . $long . '"}';
 }
 
-$long = strlen($color);
+function conLetra()
+{
+    $cont = 0;
+    $pos = -1;
+    $letra = $_GET["letra"];
+    $frase = str_split($_SESSION['color']);
+    foreach ($frase as $letraColor) {
+        if ($cont == 0) {
+            $pos++;
+        }
+        if ($letra == $letraColor) {
+            $cont++;
+        }
+    }
+    if ($cont == 0) {
+        echo '{"response":"error"}';
+    } else {
+        echo '{"response":"correct", "pos":"' . $pos . '", "letra":"' . $letra . '"}';
+    }
+}
 
-echo '{"color":"' . $color . '", "long":"' . $long . '"}';
+$method = $_SERVER['REQUEST_METHOD'];
+
+switch ($method) {
+    case 'GET':
+        if (isset($_GET["letra"])) {
+            conLetra();
+        } else {
+            startGame();
+        }
+        break;
+    case 'POST':
+}

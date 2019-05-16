@@ -39,23 +39,50 @@ const mostrarUsers = () => {
 }
 
 /* VER USUARIO SESSION */
-function mostrarUserSession() {
-
+function getSessionUser(fn: Function) {
+     const url = "http://localhost/m06Pr6/php/sesion.php"
+     fetch(url).then(resp => resp.json()).then(resp => {
+          fn(resp);
+     });
 }
 
-function getParaula(saved) {
+function mostrarUserSession() {
+     this.getSessionUser((userS) => {
+          var div = document.getElementById("seeSession");
+          div.innerHTML = "Nombre: " + userS.nombre + " / ";
+          div.innerHTML += "Apellido: " + userS.apellido;
+     })
+}
+
+/* VER USUARIOS SESSION */
+function getSessionsUser(fn: Function) {
+     const url = "http://localhost/m06Pr6/php/sesion.php?more=true";
+     fetch(url).then(resp => resp.json()).then(resp => {
+          fn(resp);
+     });
+}
+
+function mostrarUsersSession() {
+     this.getSessionsUser((usersS) => {
+          console.log(usersS);
+
+     })
+}
+
+/* PENJAT!! */
+var long = 0;
+
+function generateParaula() {
      let xmlhttp = new XMLHttpRequest();
-     xmlhttp.open("GET", "php/getColor.php?"+saved, true);
+     xmlhttp.open("GET", "php/getColor.php?", true);
      xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
      xmlhttp.onreadystatechange = function () {
           if (xmlhttp.readyState == 4) {
                if (xmlhttp.status == 200) {
                     let resposta = xmlhttp.responseText;
                     let jsonColor = JSON.parse(resposta);
-                    let color = jsonColor.color;
-                    console.log(color);
 
-                    let long = jsonColor.long;
+                    long = jsonColor.long;
                     document.getElementById("palabra").innerHTML = "";
                     for (let k = 0; k < long; k++) {
                          let span = document.createElement("SPAN");
@@ -67,4 +94,41 @@ function getParaula(saved) {
           }
      }
      xmlhttp.send();
+
+     let div = document.getElementById("error");
+     div.innerHTML = "0/5";
+     cont = 0;
+     contVictory = 0;
+}
+
+var cont = 0;
+var contVictory = 0;
+function sendLetra() {
+     let letraD = <HTMLInputElement>document.getElementById('letra');
+     let letra = letraD.value;
+     let div = document.getElementById("error");
+
+     letraD.value = ""
+
+     fetch(`php/getColor.php?letra=${letra}`)
+          .then(resp => resp.json())
+          .then(data => {
+               if (data.response == "error") {
+                    cont++;
+                    if (cont < 5) {
+                         div.innerHTML = cont + "/5";
+                    } else {
+                         div.innerHTML = "Perdiste vuelve a empezar!"
+                    }
+               } else {
+                    let span = document.getElementById("letra" + data.pos);
+                    span.innerHTML = data.letra;
+                    contVictory++;
+                    if (long == contVictory) {
+                         div.innerHTML = "Ganaste vuelve a empezar!"
+                    }
+               }
+          })
+
+
 }

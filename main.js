@@ -35,20 +35,43 @@ var mostrarUsers = function () {
     });
 };
 /* VER USUARIO SESSION */
-function mostrarUserSession() {
+function getSessionUser(fn) {
+    var url = "http://localhost/m06Pr6/php/sesion.php";
+    fetch(url).then(function (resp) { return resp.json(); }).then(function (resp) {
+        fn(resp);
+    });
 }
-function getParaula(saved) {
+function mostrarUserSession() {
+    this.getSessionUser(function (userS) {
+        var div = document.getElementById("seeSession");
+        div.innerHTML = "Nombre: " + userS.nombre + " / ";
+        div.innerHTML += "Apellido: " + userS.apellido;
+    });
+}
+/* VER USUARIOS SESSION */
+function getSessionsUser(fn) {
+    var url = "http://localhost/m06Pr6/php/sesion.php?more=true";
+    fetch(url).then(function (resp) { return resp.json(); }).then(function (resp) {
+        fn(resp);
+    });
+}
+function mostrarUsersSession() {
+    this.getSessionsUser(function (usersS) {
+        console.log(usersS);
+    });
+}
+/* PENJAT!! */
+var long = 0;
+function generateParaula() {
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("GET", "php/getColor.php?" + saved, true);
+    xmlhttp.open("GET", "php/getColor.php?", true);
     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4) {
             if (xmlhttp.status == 200) {
                 var resposta = xmlhttp.responseText;
                 var jsonColor = JSON.parse(resposta);
-                var color = jsonColor.color;
-                console.log(color);
-                var long = jsonColor.long;
+                long = jsonColor.long;
                 document.getElementById("palabra").innerHTML = "";
                 for (var k = 0; k < long; k++) {
                     var span = document.createElement("SPAN");
@@ -60,4 +83,37 @@ function getParaula(saved) {
         }
     };
     xmlhttp.send();
+    var div = document.getElementById("error");
+    div.innerHTML = "0/5";
+    cont = 0;
+    contVictory = 0;
+}
+var cont = 0;
+var contVictory = 0;
+function sendLetra() {
+    var letraD = document.getElementById('letra');
+    var letra = letraD.value;
+    var div = document.getElementById("error");
+    letraD.value = "";
+    fetch("php/getColor.php?letra=" + letra)
+        .then(function (resp) { return resp.json(); })
+        .then(function (data) {
+        if (data.response == "error") {
+            cont++;
+            if (cont < 5) {
+                div.innerHTML = cont + "/5";
+            }
+            else {
+                div.innerHTML = "Perdiste vuelve a empezar!";
+            }
+        }
+        else {
+            var span = document.getElementById("letra" + data.pos);
+            span.innerHTML = data.letra;
+            contVictory++;
+            if (long == contVictory) {
+                div.innerHTML = "Ganaste vuelve a empezar!";
+            }
+        }
+    });
 }
