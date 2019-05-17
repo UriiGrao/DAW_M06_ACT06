@@ -35,9 +35,9 @@
   </div>
 
   <div id="penjat">
-    <h2>Penjat.</h2>
-    <button onclick="generateParaula()">Empezar</button><br><br>
-
+    <h2>Penjat.</h2> 
+    <button onclick="generateParaula()">Empezar</button>
+    <button onclick="message()">IMPORTANT!</button><br><br>
     Letra: <input type="text" id="letra"  />
     <button onclick="sendLetra()">Probar</button>
     <div id="palabra">
@@ -45,6 +45,12 @@
     </div>
     <div id="error"></div>
   </div>
+  <br>
+  <div id="newParaula">
+    Nueva Palabra: <input type="text" id="newPalabra"  />
+    <button onclick="sendPalabra()">Insertar</button>
+  </div>
+
 </body>
 
 </html>

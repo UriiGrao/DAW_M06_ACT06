@@ -1,4 +1,9 @@
 
+function message() {
+     alert("El boton empezar reinicia el juego y la palabra!");
+}
+
+
 /*  VER USUARIO */
 function getUser(fn: Function) {
      const url = "http://localhost/m06Pr6/php/getUser.php"
@@ -129,6 +134,15 @@ function sendLetra() {
                     }
                }
           })
+}
 
+function sendPalabra() {
+     let palabraD = <HTMLInputElement>document.getElementById('newPalabra');
+     let palabra = palabraD.value;
 
+     fetch(`php/getColor.php?palabra=${palabra}`)
+     .then(resp => resp.json())
+     .then(data=> {
+          console.log(data);
+     })
 }

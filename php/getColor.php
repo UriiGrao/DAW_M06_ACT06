@@ -15,6 +15,14 @@ function startGame()
     echo '{"color":"' . $color . '", "long":"' . $long . '"}';
 }
 
+function insertPalabra() {
+    global $colors;
+    $palabra = $_GET["palabra"];
+    $colors[] = $palabra;
+    $array = json_encode($colors);
+    echo '{"all":'. $array .'}';
+}
+
 function conLetra()
 {
     $cont = 0;
@@ -40,7 +48,9 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 switch ($method) {
     case 'GET':
-        if (isset($_GET["letra"])) {
+        if(isset($_GET["palabra"])){
+            insertPalabra();
+        } else if (isset($_GET["letra"])) {
             conLetra();
         } else {
             startGame();
